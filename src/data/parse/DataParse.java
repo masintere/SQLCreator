@@ -19,22 +19,18 @@ import java.io.IOException;
  ****************************************************************************/
 public class DataParse {
 	private String filename;
-	private String [] data;
-	private static final String DELIMINATION = ",";
-	private int numTimes = 1;
+	public static final String DELIMINATION = "\t";
+	private int numTimes = 0;
 	
 	public DataParse(String filename){
 		this.filename = filename;
-		data = readData().split(DELIMINATION);
-		for(String s : data)
-			s.replace(DELIMINATION, "");
 	}
 	
 	public void setNumTimes(int numTimes){
 		this.numTimes = numTimes;
 	}
 	
-	public int getNumTImes(){
+	public int getNumTimes(){
 		return numTimes;
 	}
 	
@@ -42,21 +38,23 @@ public class DataParse {
 	 * runs through the data and returns a line from a file
 	 * @return the line returned from the file
 	 */
-	public String readData(){
+	public String[] readData(){
 		File file = new File(filename);
 		String dataString = "";
+		String[] nothing = null;
 		try {
 			FileReader fr = new FileReader(file);
 			BufferedReader br = new BufferedReader(fr);
 			for(int i = 0; i <= numTimes; i++){
 				dataString = br.readLine();
 				if(dataString.equals(null))
-					return "String Null";
+					return nothing;
 			}
+			br.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return dataString;
+		return dataString.split(DELIMINATION);
 	}
 }
