@@ -2,16 +2,15 @@ package data.sql;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
+
 
 import data.parse.DataParse;
 
 /****************************************************************************
  * <b>Title</b>: DataAdder.java <p/>
  * <b>Project</b>: WebCrescendo <p/>
- * <b>Description: </b> Put Something Here
+ * <b>Description: </b> Class used to add data to a table in a database
  * <p/>
  * <b>Copyright:</b> Copyright (c) 2015<p/>
  * <b>Company:</b> Silicon Mountain Technologies<p/>
@@ -38,30 +37,47 @@ public class DataAdder {
 		return numTimes;
 	}
 	
-	public String[] getTheInfo(){
-		while(db.getNumTimes() <= numTimes)
-			info = db.readData();
-		numTimes += 1;
-		db.setNumTimes(numTimes);
-		for(String s : info){
-			s.replace(DataParse.DELIMINATION, "");
-		}
+	public String[] getInfo(){
 		return info;
 	}
 	
 	/**
-	 * Only run this if it is the first string of text being run in from the file
+	 * Gets information from the file given
+	 * @return and array of strings for each tab deliminated item in one line of the file
+	 */
+	public String[] getTheInfo(){
+		while(db.getNumTimes() >= numTimes){
+			info = db.readData();
+			numTimes += 1;
+		}
+		db.setNumTimes(numTimes);
+		for(String s : info){
+			s.replace(DataParse.DELIMINATION, "");
+		}
+		if(numTimes == 1)
+			headers = info;
+		return info;
+	}
+	
+	/**
+	 * Creates the table that will be used using the first line of data from the file given
 	 */
 	public void createTables(){
 		info = getTheInfo();
-		headers = info;
 		try {
-			Statement stm = con.createStatement();
-			stm.execute("CREATE DATABASE Geolocation");
-		for(String s : info){
-			stm.execute("CREATE TABLE " + s + "(" + s + "varchar(32)," + s + "_id int);");
+			StringBuilder execute = new StringBuilder();
+			execute.append("CREATE TABLE GEOLOCATION (");
+		for(int i = 0; i < info.length; i++){
+			if(i > 0)
+				execute.append(",");
+			execute.append(info[i]);
+			execute.append(" varchar(50)");
+				
 		}
 		
+		execute.append(");");
+		PreparedStatement stm = con.prepareStatement(execute.toString());
+		stm.execute();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -69,32 +85,46 @@ public class DataAdder {
 	}
 	
 	/**
-	 * add a line of data to the set of information
+	 * creates a query tothe table it is trying to reach and adds information to it
+	 * uses a prepared statement to execute the query in sql
 	 */
 	public void addData(){
 		info = getTheInfo();
-		int i = 0;
 		try {
-			Statement stm = con.createStatement();
-			for(String s : info){
-				stm.execute("INSERT INTO " + headers[i] + "(" + headers[i] + "," + headers[i] + "_id)" +
-			" VALUES ('" + s + "'," + i + ");");
+			StringBuilder sql = new StringBuilder();
+			sql.append("INSERT INTO GEOLOCATION(");
+			for(int i = 0; i < headers.length; i++){
+				if (i > 0) sql.append(",");
+				sql.append(headers[i]);
 			}
-			Statement test = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-			ResultSet rs = test.executeQuery("SELECT " + info[0] + "FROM " + headers[0]);
-			int id = rs.getInt(headers[0] + "_id");
-			String geo = rs.getString(headers[0]);
-			System.out.println(id + "     " + geo);
+			sql.append(") VALUES (");
+			for(String s : info){
+				if(!s.equals(info[info.length - 1]))
+					sql.append("?, ");
+				else
+					sql.append("?");
+			}
+			sql.append(");");
+			PreparedStatement stm = con.prepareStatement(sql.toString());
+			for(int i = 0; i < info.length; i++){
+				stm.setString(i+1, info[i]);
+			}
+			stm.execute();
+			//System.out.println(execute);
 			
 		}catch (SQLException e){
 			e.printStackTrace();
 		}
 	}
-	public static void main(String[] args){
+	
+
+	
+	public static void main(String [] args){
 		DataAdder da = new DataAdder("geolocation.txt");
-		if(da.getNumTimes() == 0)
-			da.createTables();
-		da.addData();
+		//if(da.getNumTimes() == 0)
+		da.createTables();
+		while(da.getInfo() != null)
+			da.addData();
 		
 		
 	}

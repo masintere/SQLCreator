@@ -8,7 +8,7 @@ import java.io.IOException;
 /****************************************************************************
  * <b>Title</b>: DataParse.java <p/>
  * <b>Project</b>: WebCrescendo <p/>
- * <b>Description: </b> Put Something Here
+ * <b>Description: </b> Reads information from a file
  * <p/>
  * <b>Copyright:</b> Copyright (c) 2015<p/>
  * <b>Company:</b> Silicon Mountain Technologies<p/>
@@ -47,7 +47,7 @@ public class DataParse {
 			BufferedReader br = new BufferedReader(fr);
 			for(int i = 0; i <= numTimes; i++){
 				dataString = br.readLine();
-				if(dataString.equals(null))
+				if(dataString == "")
 					return nothing;
 			}
 			br.close();

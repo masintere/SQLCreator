@@ -3864,7 +3864,7 @@ GEOLOCATION_ID	IP_START_TXT	IP_END_TXT	CITY_NM	STATE_CD	STATE_NM	COUNTRY_CD	COUN
 1140793	2001:0470:1139	2001:0470:1139:ffff:ffff:ffff:ffff:ffff	Denver		Colorado	US		0
 1140796	2001:0470:1146	2001:0470:1146:ffff:ffff:ffff:ffff:ffff	Denver		Colorado	US		0
 1140798	2001:0470:1148	2001:0470:1148:ffff:ffff:ffff:ffff:ffff	Denver		Colorado	US		0
-1140800	2001:0470:1157	2001:0470:1157:ffff:ffff:ffff:ffff:ffff	Denver		Colorado	US		0
+1140while(da.getTheInfo() != null)800	2001:0470:1157	2001:0470:1157:ffff:ffff:ffff:ffff:ffff	Denver		Colorado	US		0
 1140802	2001:0470:1163	2001:0470:1163:ffff:ffff:ffff:ffff:ffff	Denver		Colorado	US		0
 1140804	2001:0470:1168	2001:0470:1168:ffff:ffff:ffff:ffff:ffff	Denver		Colorado	US		0
 1140806	2001:0470:116f	2001:0470:116f:ffff:ffff:ffff:ffff:ffff	Denver		Colorado	US		0
